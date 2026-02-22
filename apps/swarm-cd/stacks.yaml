@@ -1,0 +1,4 @@
+swarm-cd:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/swarm-cd/compose.yaml

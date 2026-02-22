@@ -1,0 +1,26 @@
+services:
+  swarm-cd:
+    image: ghcr.io/m-adawi/swarm-cd:1.10.0
+    ports:
+      - "8080:8080"
+    configs:
+      - source: swarm_cd_config
+        target: /app/config.yaml
+      - source: swarm_cd_repos
+        target: /app/repos.yaml
+      - source: swarm_cd_stacks
+        target: /app/stacks.yaml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+configs:
+  swarm_cd_config:
+    file: ./config.yaml
+  swarm_cd_repos:
+    file: ./repos.yaml
+  swarm_cd_stacks:
+    file: ./stacks.yaml
