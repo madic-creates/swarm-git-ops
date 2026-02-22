@@ -1,0 +1,44 @@
+networks:
+    syncthing4swarm:
+        driver: overlay
+        internal: true
+services:
+    syncthing4swarm:
+        # https://github.com/SuitDeer/syncthing4swarm
+        image: suitdeer/syncthing4swarm:2.0.14
+        volumes:
+            - /var/syncthing/data:/var/syncthing/data
+        deploy:
+            mode: global
+        environment:
+            - ENC[AES256_GCM,data:OrRUYaLi+ry5Jtv8xZdAJFYAn001ZvOa8LfSMCdIN/BrTS2sbLPcMkwFGS7KBO5XbgSolnA/F+2PPEXkTlyRcZNryes+Ky6Cwv1FOA==,iv:XM+fxhCeTzmwqehPVrjWu50sdAInnxpvulxF1Oggu5U=,tag:/j9S3IWPD2Y/5QeWP+J9MA==,type:str]
+            - ENC[AES256_GCM,data:6BYv0+Oh7XfxEYnrwh73pxCOhQ==,iv:n10Gm5SgxrAo4zHJtQPmyCLs0t7j/Z/aBoRXfYCaZXs=,tag:iQIIMbZ8pbd2Q6hU9gXu7g==,type:str]
+            - ENC[AES256_GCM,data:hb/Oqs64sXFodoW5ktWfysnz+3CdJ3OWu3MAyCNXFweYivlZov5QGxY=,iv:9lkfdinPkhJuUTdSzIH8bXhoymQuJOGx3XWpLsvmsnM=,tag:nibHng8fKi+X9TqBeSrYPQ==,type:str]
+            - ENC[AES256_GCM,data:iCIXNZ4M,iv:gu0PrdMp0mp8LF55JHsE7Wup127vqRdCydm7ZnQncg8=,tag:g66rKxXzhzgrv4Cj7d/NnQ==,type:str]
+            - ENC[AES256_GCM,data:Mj6jXbuI,iv:iYNU99dCDOXDtoBbi3S63/MUxfp/aERWGFPL/43tTmg=,tag:jUlKYVtfL9CB70Cn9Ld+Zg==,type:str]
+        networks:
+            - syncthing4swarm
+sops:
+    age:
+        - recipient: age1d2g7tgqpfvxulsusn3m608h60h2hne7yqwv5nh5nd24z6h0hgq0skjkhw8
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3S0toTWtaRUZ3L01SbUlq
+            VWQvZlA5MVlRYU9Sa0hWM0IxRHhrYkprU25NCjRBdUo1cUFGRUFsc0JXUHhUNGdm
+            WVpGWmVIaE5GbWVMaEhFTnlXNUZtUHMKLS0tIG9iSVpTQnh6KzFvQWVyM0xLdVI4
+            Mm5BcUFhRkRrbm15d3FjMjBBdnNsNFUKt1PR//bi/ikbnuNpJ3f13iv9EeQEMIjK
+            NMPLx78s5hLw2iFuqy/lRJ+tJyJ1AbY9ila+z4Xq/UXcC1yZpmoHnw==
+            -----END AGE ENCRYPTED FILE-----
+        - recipient: age1q522xtgjrmvr43w7um5rh02ta3yfns635680hz4m7uhw0nfqj5zqgxnz27
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSArWU83V0NYcHltT1ZpNkhj
+            MCtYZ2ZMVWplOHBKYWNUN1VKc2ZNM0xybGhRCnJOd2U1SDg4WWFBalFOdUMybHFn
+            b2VvNndTRXY2anpQV1lmNjRlYnFJZ1UKLS0tIG9vb2MyY3pEY2lwRktKNWY0dEpG
+            d3AwZDhPUURuRVhtOWMrYk5DQnJURXcKU1R4xHUKpeoo0J2P6g/NlFElKLo9lZl0
+            UDgJF0pOLIIZ8F9dKiYZNddHfiDIV3izS9yNrEZoUgYX0TXlugF8Kg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-02-22T22:45:49Z"
+    mac: ENC[AES256_GCM,data:nwb8epfSYtmnJ06PYe1saC0zrpyvhrLPTdQi6m0ApN+ZIzEUSYaZKxCdqcsE4C+V43XLaz73wjbdRM1z0cp6Hj/qW7ESmYPWTFx8CQcFm7cp6aIQ13muclDls1vN+TiFaWu+bej+cNpmbOUDFYCVj+GwDlHccAQqRbZS7xqgm8c=,iv:4m4x9OtUbQdSduBfQrrKXy75LY6qGuv3LlYxWyysd/0=,tag:ol2P72XMNCtl1OF0SXnXeA==,type:str]
+    encrypted_regex: environment
+    version: 3.11.0

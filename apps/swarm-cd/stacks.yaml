@@ -2,3 +2,8 @@ swarm-cd:
   repo: swarm-git-ops
   branch: main
   compose_file: apps/swarm-cd/compose.yaml
+
+syncthing4swarm:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/syncthing4swarm/compose.yaml
