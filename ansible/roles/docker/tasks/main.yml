@@ -1,0 +1,21 @@
+- name: Installing pre-requirements
+  pacman:
+    name:
+      - nftables
+      - libnftnl
+    state: latest
+    update_cache: true
+
+- name: Installing Docker
+  pacman:
+    name:
+      - docker
+      - docker-compose
+    state: present
+    update_cache: true
+
+- name: Enable and start Docker service
+  systemd:
+    name: docker
+    enabled: true
+    state: started
