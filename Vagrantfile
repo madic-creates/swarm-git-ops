@@ -62,7 +62,8 @@ Vagrant.configure("2") do |config|
       # Install Python on each VM individually
       node.vm.provision "python-install", type: "shell", inline: <<-SHELL
         pacman -Sy --noconfirm archlinux-keyring
-        pacman -Sy --noconfirm python openssl glibc
+        pacman -Sy --noconfirm python openssl git fakeroot debugedit
+        pacman -Syu --noconfirm --ignore linux,linux-headers
       SHELL
 
       # Configure Ansible provisioner (only once for all VMs)

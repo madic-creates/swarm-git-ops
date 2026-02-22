@@ -1,3 +1,6 @@
+---
+# code: language=ansible
+
 - name: Installing pre-requirements
   pacman:
     name:

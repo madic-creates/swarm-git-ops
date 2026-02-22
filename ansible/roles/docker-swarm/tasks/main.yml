@@ -1,3 +1,6 @@
+---
+# code: language=ansible
+
 - name: Resolve Swarm manager IP dynamically
   set_fact:
     swarm_manager_ip: "{{ hostvars[groups['swarm_managers'][0]].ansible_host }}"

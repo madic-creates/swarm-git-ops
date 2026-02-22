@@ -1,0 +1,40 @@
+---
+# code: language=ansible
+
+- name: "Common | Include OS-specific tasks"
+  ansible.builtin.include_tasks: "{{ ansible_os_family }}.yaml"
+
+- name: "Common | Gather service facts"
+  ansible.builtin.service_facts:
+
+- name: "Common | Check if /etc/resolv.conf exists"
+  ansible.builtin.stat:
+    path: /etc/resolv.conf
+  register: resolv_conf
+
+- name: "Common | Configure systemd-resolved to manage /etc/resolv.conf"
+  when:
+    - ansible_facts.services.get('systemd-resolved.service', {}).get('status', 'disabled') == 'enabled'
+    - resolv_conf.stat.exists
+    - not resolv_conf.stat.islnk or resolv_conf.stat.lnk_source != '/run/systemd/resolve/stub-resolv.conf'
+  block:
+    - name: "Common | Backup /etc/resolv.conf"
+      ansible.builtin.copy:
+        src: /etc/resolv.conf
+        dest: /etc/resolv.conf.bak
+        owner: root
+        group: root
+        mode: '0644'
+        remote_src: true
+
+    - name: "Common | Delete /etc/resolv.conf"
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
+
+    - name: "Common | Link systemd-resolved to resolv.conf"
+      ansible.builtin.file:
+        src: /run/systemd/resolve/stub-resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+      when: not ansible_check_mode

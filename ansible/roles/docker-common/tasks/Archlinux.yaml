@@ -1,0 +1,52 @@
+---
+# code: language=ansible
+
+- name: "Archlinux | Update archlinux-keyring"
+  community.general.pacman:
+    name:
+      - archlinux-keyring
+    state: latest
+
+- name: "Archlinux | Install packages"
+  community.general.pacman:
+    name:
+      - nano
+      - htop
+
+- name: Common | Arch | Creating user aur_builder
+  user:
+    name: aur_builder
+  become: true
+
+- name: Common | Arch | Allow user aur_builder to use pacman
+  lineinfile:
+    path: /etc/sudoers.d/aur_builder
+    state: present
+    line: "aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman"
+    validate: /usr/sbin/visudo -cf %s
+    create: true
+    owner: root
+    group: root
+    mode: 0600
+  become: true
+
+- name: Common | Arch | Installing yay from aur
+  kewlfft.aur.aur:
+    name: yay-bin
+    state: present
+  become: true
+  become_user: aur_builder
+
+- name: "Archlinux | Install qemu-guest-agent on KVM"
+  community.general.pacman:
+    name: qemu-guest-agent
+  when: ansible_virtualization_type == "kvm"
+
+- name: "Archlinux | Comment out DNS servers from vagrant image"
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^DNS=4\.2\.2\.1 4\.2\.2\.2 208\.67\.220\.220'
+    line: '#DNS=4.2.2.1 4.2.2.2 208.67.220.220'
+    backrefs: true
+    state: present
+  notify: "Restart systemd-resolved"

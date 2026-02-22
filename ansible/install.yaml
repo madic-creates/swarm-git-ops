@@ -1,3 +1,10 @@
+---
+- name: Execute common tasks on every node
+  hosts: all
+  become: true
+  roles:
+    - docker-common
+
 - name: Install Docker on all nodes
   hosts: all
   become: true
