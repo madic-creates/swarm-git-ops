@@ -10,6 +10,11 @@ services:
         target: /app/repos.yaml
       - source: swarm_cd_stacks
         target: /app/stacks.yaml
+    secrets:
+      - source: sops_age_key
+        target: /secrets/age.key
+    environment:
+      SOPS_AGE_KEY_FILE: /secrets/age.key
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
@@ -24,3 +29,7 @@ configs:
     file: ./repos.yaml
   swarm_cd_stacks:
     file: ./stacks.yaml
+
+secrets:
+  sops_age_key:
+    external: true

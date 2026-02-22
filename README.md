@@ -41,12 +41,43 @@ apps/
 
 3. Commit and push. SwarmCD detects the config change, redeploys itself, and then deploys the new stack.
 
+## Secret management
+
+Secrets are managed with [SOPS](https://github.com/getsops/sops) and [age](https://github.com/FiloSottile/age) encryption. SwarmCD has native SOPS support and automatically decrypts encrypted files before deploying stacks.
+
+Two age keys are used:
+
+- **Personal key** — for local development and as the sole key for encrypting the cluster age key backup in `secrets/age.key`
+- **Cluster key** — used by SwarmCD on the cluster to decrypt SOPS-encrypted files
+
+Both keys are listed as recipients in `.sops.yaml` for application secrets, so either key can decrypt them. The cluster key itself is stored SOPS-encrypted in `secrets/age.key` (encrypted only with the personal key) as a backup.
+
+SwarmCD discovers SOPS-encrypted files automatically via `sops_secrets_discovery: true` in `config.yaml`. No per-stack `sops_files` configuration is needed.
+
 ## Initial deployment
 
 ### Prerequisites
 
 - A Docker Swarm cluster (at least one manager node)
 - Git clone of this repository on a manager node
+
+### Create the SOPS age Docker secret
+
+The cluster age private key must be provided to SwarmCD out-of-band via a Docker secret. This is a one-time bootstrap step.
+
+**Via Vagrant** (decrypts the key locally, copies it through the synced folder):
+
+```shell
+sops -d secrets/age.key > shared/age.key
+vagrant ssh swarm01 -- docker secret create sops_age_key /vagrant/age.key
+rm shared/age.key
+```
+
+**Directly on a Swarm Manager Node:**
+
+```shell
+docker secret create sops_age_key /path/to/cluster-age-private-key.txt
+```
 
 ### Bootstrap SwarmCD
 
