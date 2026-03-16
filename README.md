@@ -47,8 +47,8 @@ Secrets are managed with [SOPS](https://github.com/getsops/sops) and [age](https
 
 Two age keys are used:
 
-- **Personal key** — for local development and as the sole key for encrypting the cluster age key backup in `secrets/age.key`
-- **Cluster key** — used by SwarmCD on the cluster to decrypt SOPS-encrypted files
+- **Personal key**: for local development and as the sole key for encrypting the cluster age key backup in `secrets/age.key`
+- **Cluster key**: used by SwarmCD on the cluster to decrypt SOPS-encrypted files
 
 Both keys are listed as recipients in `.sops.yaml` for application secrets, so either key can decrypt them. The cluster key itself is stored SOPS-encrypted in `secrets/age.key` (encrypted only with the personal key) as a backup.
 
@@ -102,4 +102,14 @@ docker service logs swarm-cd_swarm-cd
 
 # Access the SwarmCD UI
 # http://<manager-node-ip>:8080
+```
+
+## Local testing without GitHub push
+
+The Vagrant environment includes a local git server on `swarm01` that allows testing the full GitOps flow without pushing to GitHub. See [docs/local-deploy.md](docs/local-deploy.md) for full documentation.
+
+```shell
+./scripts/local-deploy.sh              # Full GitOps deploy via local git daemon
+./scripts/local-deploy.sh stack caddy  # Deploy single stack (bypasses SwarmCD)
+./scripts/local-deploy.sh status       # Show cluster status
 ```
