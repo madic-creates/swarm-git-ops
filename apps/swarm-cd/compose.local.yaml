@@ -1,0 +1,7 @@
+services:
+  swarm-cd:
+    image: swarm-cd:local-patch
+
+configs:
+  swarm_cd_repos:
+    file: ./repos.local.yaml

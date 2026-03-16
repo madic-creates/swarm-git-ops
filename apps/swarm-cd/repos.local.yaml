@@ -1,0 +1,2 @@
+swarm-git-ops:
+  url: "git://172.17.0.1/swarm-git-ops.git"
