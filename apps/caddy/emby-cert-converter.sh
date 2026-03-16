@@ -48,5 +48,6 @@ echo "Watching for certificate changes for $DOMAIN in Redis..."
 
 while true; do
     convert_cert || true
-    sleep 300
+    # 12h
+    sleep 43200
 done
