@@ -1,6 +1,16 @@
 ---
 # code: language=ansible
 
+- name: "Archlinux | Install reflector for mirror ranking"
+  community.general.pacman:
+    name: reflector
+    state: present
+
+- name: "Archlinux | Rank mirrors by speed"
+  ansible.builtin.command:
+    cmd: reflector --country Germany,France,Netherlands --protocol https --sort rate --latest 10 --save /etc/pacman.d/mirrorlist
+  changed_when: true
+
 - name: "Archlinux | Update archlinux-keyring"
   community.general.pacman:
     name:

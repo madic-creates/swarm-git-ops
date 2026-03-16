@@ -1,0 +1,34 @@
+global_defs {
+    router_id {{ inventory_hostname }}
+    script_user root
+    enable_script_security
+}
+
+vrrp_script check_caddy {
+    script "/usr/bin/curl -sf {{ keepalived_check_url }} -o /dev/null"
+    interval {{ keepalived_check_interval }}
+    weight {{ keepalived_check_weight }}
+    fall {{ keepalived_check_fall }}
+    rise {{ keepalived_check_rise }}
+}
+
+{% for vip in keepalived_vips %}
+vrrp_instance {{ vip.name }} {
+    state {{ 'MASTER' if inventory_hostname in groups['swarm_managers'] else 'BACKUP' }}
+    interface {{ keepalived_interface }}
+    virtual_router_id {{ vip.virtual_router_id }}
+    priority {{ keepalived_priority_master if inventory_hostname in groups['swarm_managers'] else keepalived_priority_backup }}
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass {{ vip.auth_pass }}
+    }
+    virtual_ipaddress {
+        {{ vip.address }}
+    }
+    track_script {
+        check_caddy
+    }
+}
+
+{% endfor %}

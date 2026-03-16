@@ -1,0 +1,21 @@
+---
+- name: Keepalived | Install keepalived
+  community.general.pacman:
+    name: keepalived
+    state: present
+    update_cache: true
+
+- name: Keepalived | Deploy configuration
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart keepalived
+
+- name: Keepalived | Enable and start service
+  ansible.builtin.systemd:
+    name: keepalived
+    enabled: true
+    state: started

@@ -11,6 +11,12 @@
   roles:
     - docker
 
+- name: Configure keepalived for VIP failover
+  hosts: all
+  become: true
+  roles:
+    - keepalived
+
 - name: Initialize Swarm on managers
   hosts: swarm_managers
   become: true

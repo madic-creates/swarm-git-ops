@@ -1,0 +1,4 @@
+---
+docker_daemon_config:
+  registry-mirrors:
+    - https://registry.internal.neese-web.de

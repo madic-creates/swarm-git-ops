@@ -1,0 +1,21 @@
+---
+keepalived_interface: eth0
+
+keepalived_priority_master: 100
+keepalived_priority_backup: 90
+
+keepalived_check_url: "http://localhost:2019/config/"
+keepalived_check_interval: 5
+keepalived_check_weight: -20
+keepalived_check_fall: 3
+keepalived_check_rise: 2
+
+keepalived_vips:
+  - name: CADDY_EXTERNAL
+    address: "192.168.1.231/24"
+    virtual_router_id: 31
+    auth_pass: caddy231
+  - name: CADDY_INTERNAL
+    address: "192.168.1.239/24"
+    virtual_router_id: 39
+    auth_pass: caddy239

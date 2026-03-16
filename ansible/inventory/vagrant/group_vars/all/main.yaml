@@ -1,0 +1,11 @@
+---
+keepalived_interface: eth1
+keepalived_vips:
+  - name: CADDY_EXTERNAL
+    address: "192.168.34.231/24"
+    virtual_router_id: 31
+    auth_pass: caddy231
+  - name: CADDY_INTERNAL
+    address: "192.168.34.239/24"
+    virtual_router_id: 39
+    auth_pass: caddy239

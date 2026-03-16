@@ -17,8 +17,32 @@
     state: present
     update_cache: true
 
+- name: Create Docker config directory
+  file:
+    path: /etc/docker
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Configure Docker daemon
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Docker
+
 - name: Enable and start Docker service
   systemd:
     name: docker
     enabled: true
     state: started
+
+- name: Add vagrant user to docker group
+  user:
+    name: vagrant
+    groups: docker
+    append: true
+  when: ansible_user == 'vagrant'
