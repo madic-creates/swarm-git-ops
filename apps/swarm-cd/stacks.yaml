@@ -3,7 +3,37 @@ swarm-cd:
   branch: main
   compose_file: apps/swarm-cd/compose.yaml
 
+caddy:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/caddy/compose.yaml
+
+emby:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/emby/compose.yaml
+
 syncthing4swarm:
   repo: swarm-git-ops
   branch: main
   compose_file: apps/syncthing4swarm/compose.yaml
+
+mariadb:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/mariadb/compose.yaml
+
+redis:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/redis/compose.yaml
+
+lldap:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/lldap/compose.yaml
+
+authelia:
+  repo: swarm-git-ops
+  branch: main
+  compose_file: apps/authelia/compose.yaml
