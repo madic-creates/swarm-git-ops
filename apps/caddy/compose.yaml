@@ -28,7 +28,7 @@ secrets:
 
 services:
   caddy:
-    image: ghcr.io/madic-creates/swarm-git-ops/caddy-custom:latest
+    image: ghcr.io/madic-creates/swarm-git-ops/caddy-custom:30cd4d1fec1051cc3628f9a410340592923ab6d3
     networks:
       - caddy-public
       - auth-backend
