@@ -59,12 +59,47 @@ Vagrant.configure("2") do |config|
       provision_all = running_machines.empty?
       provision_single = !running_machines.empty? && running_machines.include?(name)
 
+      # Mount repo root on manager for local GitOps testing
+      if name == "swarm01"
+        node.vm.synced_folder ".", "/repo", type: "virtiofs"
+      end
+
       # Install Python on each VM individually
       node.vm.provision "python-install", type: "shell", inline: <<-SHELL
         pacman -Sy --noconfirm archlinux-keyring
         pacman -Sy --noconfirm python openssl git fakeroot debugedit
         pacman -Syu --noconfirm --ignore linux,linux-headers
       SHELL
+
+      # Set up local git server on manager for testing without GitHub push
+      if name == "swarm01"
+        node.vm.provision "git-server", type: "shell", inline: <<-SHELL
+          # Create bare repo from mounted source
+          mkdir -p /srv/git
+          if [ ! -d /srv/git/swarm-git-ops.git ]; then
+            git clone --bare /repo /srv/git/swarm-git-ops.git
+          fi
+          chown -R vagrant:vagrant /srv/git
+
+          # Create systemd unit for git daemon
+          cat > /etc/systemd/system/git-daemon.service << 'UNIT'
+[Unit]
+Description=Git Daemon for local SwarmCD testing
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/git daemon --reuseaddr --base-path=/srv/git --export-all /srv/git
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+          systemctl daemon-reload
+          systemctl enable --now git-daemon
+        SHELL
+      end
 
       # Configure Ansible provisioner (only once for all VMs)
       if (provision_all && !provision_done) || provision_single
@@ -73,7 +108,7 @@ Vagrant.configure("2") do |config|
           ansible.compatibility_mode = "2.0"
           ansible.config_file = "ansible/ansible.cfg"
           ansible.playbook = "ansible/install.yaml"
-          #ansible.extra_vars = "@ansible/inventory/vagrant/group_vars/all/main.yaml"
+          ansible.extra_vars = "@ansible/inventory/vagrant/group_vars/all/main.yaml"
           ansible.galaxy_role_file = "ansible/requirements.yaml"
           ansible.groups = all_groups
           ansible.become = true
