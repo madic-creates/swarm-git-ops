@@ -1,2 +1,4 @@
 .vagrant
 .envrc
+tmp/*
+!tmp/.gitkeep
